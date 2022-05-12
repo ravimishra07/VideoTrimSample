@@ -1,9 +1,10 @@
-package com.ravi.videotrimsample
+package com.ravi.videotrimsample.activity
 
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+import com.ravi.videotrimsample.R
 
 class MainActivity : AppCompatActivity() {
     lateinit var selectVideo: TextView

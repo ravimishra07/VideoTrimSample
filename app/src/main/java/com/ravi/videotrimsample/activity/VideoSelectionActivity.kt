@@ -1,9 +1,8 @@
-package com.ravi.videotrimsample
+package com.ravi.videotrimsample.activity
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -16,18 +15,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.ravi.videotrimsample.util.Constants
+import com.ravi.videotrimsample.util.Constants.TRIMMED_VIDEO_PATH
+import com.ravi.videotrimsample.R
 import java.io.File
 
-class VideoSelectionActivity : AppCompatActivity()  {
+class VideoSelectionActivity : AppCompatActivity() {
     lateinit var selectVideo: TextView
     private var videoView: VideoView? = null
     private var mediaController: MediaController? = null
-    companion object{
+
+    companion object {
         private val TAG = "VideoSelectionActivity"
-
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,14 +36,13 @@ class VideoSelectionActivity : AppCompatActivity()  {
         mediaController = MediaController(this)
         videoView = findViewById(R.id.video_view)
 
-
-        selectVideo.setOnClickListener{
+        selectVideo.setOnClickListener {
             if (checkCamStoragePer())
                 openVideo()
         }
-
     }
-    fun openVideo() {
+
+    private fun openVideo() {
         try {
             val intent = Intent()
             intent.type = "video/*"
@@ -53,6 +52,7 @@ class VideoSelectionActivity : AppCompatActivity()  {
             e.printStackTrace()
         }
     }
+
     private fun checkPermission(vararg permissions: String): Boolean {
         var allPermitted = false
         for (permission in permissions) {
@@ -61,6 +61,7 @@ class VideoSelectionActivity : AppCompatActivity()  {
             if (!allPermitted) break
         }
         if (allPermitted) return true
+
         ActivityCompat.requestPermissions(
             this, permissions,
             220
@@ -75,57 +76,53 @@ class VideoSelectionActivity : AppCompatActivity()  {
         )
     }
 
-    var takeOrSelectVideoResultLauncher = registerForActivityResult(
+    private var takeOrSelectVideoResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK &&
             result.data != null
         ) {
             val data = result.data
-            //check video duration if needed
-            /*        if (TrimmerUtils.getDuration(this,data.getData())<=30){
-                           Toast.makeText(this,"Video should be larger than 30 sec",Toast.LENGTH_SHORT).show();
-                           return;
-                       }*/if (data!!.data != null) {
-                Log.v(TAG , data.data.toString())
+            if (data!!.data != null) {
+                Log.v(TAG, data.data.toString())
                 openTrimActivity(data.data.toString())
             } else {
                 Toast.makeText(this, "video uri is null", Toast.LENGTH_SHORT).show()
             }
-        } else Log.v(TAG,"takeVideoResultLauncher data is null")
+        } else Log.v(TAG, "takeVideoResultLauncher data is null")
     }
-    var videoTrimResultLauncher = registerForActivityResult(
+    private var videoTrimResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK &&
             result.data != null
         ) {
-            val uri =
-                Uri.parse(TrimVideo.getTrimmedVideoPath(result.data))
-            Log.d(TAG, "Trimmed path:: $uri")
-            videoView?.setMediaController(mediaController)
-            videoView?.setVideoURI(uri)
-            videoView?.requestFocus()
-            videoView?.start()
-            videoView?.setOnPreparedListener { mediaPlayer: MediaPlayer? ->
-                mediaController?.setAnchorView(
-                    videoView
-                )
+            val uri = Uri.parse(result.data?.getStringExtra(TRIMMED_VIDEO_PATH))
+            Log.d(TAG, "Trimmed video path:: $uri")
+            videoView?.apply {
+                setMediaController(mediaController)
+                setVideoURI(uri)
+                requestFocus()
+                start()
+                setOnPreparedListener {
+                    mediaController?.setAnchorView(videoView)
+                }
             }
+
             val filepath = uri.toString()
             val file = File(filepath)
             val length = file.length()
-             Log.d(TAG, "Video size:: " + length / 1024)
+            Log.d(TAG, "Video size:: " + length / 1024)
         } else {
-            //   LogMessage.v("videoTrimResultLauncher data is null")
+            Log.v(TAG, "video data is null")
         }
     }
 
     private fun openTrimActivity(data: String) {
-        TrimVideo.activity(data)
-            .setCompressOption(CompressOption()) //pass empty constructor for default compress option
-            .start(this, videoTrimResultLauncher)
-
+        val intent = Intent(this, VideoTrimActivity::class.java)
+        val bundle = Bundle()
+        bundle.putString(Constants.TRIM_VIDEO_URI, data)
+        intent.putExtras(bundle)
+        videoTrimResultLauncher.launch(intent)
     }
-
 }

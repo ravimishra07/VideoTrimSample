@@ -25,7 +25,7 @@
                 android:layout_marginTop="20dp"
                 android:clipChildren="false">
 
-                <com.ravi.videotrimsample.crystalrangeseekbar.widgets.CrystalSeekbar
+                <com.ravi.videotrimsample.widgets.CrystalSeekbar
                     android:id="@+id/rangeSeekbar1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -62,7 +62,7 @@
                 android:layout_marginTop="30dp"
                 android:clipChildren="false">
 
-                <com.ravi.videotrimsample.crystalrangeseekbar.widgets.BubbleThumbSeekbar
+                <com.ravi.videotrimsample.widgets.BubbleThumbSeekbar
                     android:id="@+id/rangeSeekbar2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
-                <com.ravi.videotrimsample.crystalrangeseekbar.widgets.CrystalSeekbar
+                <com.ravi.videotrimsample.widgets.CrystalSeekbar
                     android:id="@+id/rangeSeekbar3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
-                <com.ravi.videotrimsample.crystalrangeseekbar.widgets.CrystalSeekbar
+                <com.ravi.videotrimsample.widgets.CrystalSeekbar
                     android:id="@+id/rangeSeekbar4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
                 android:layout_marginTop="30dp"
                 android:clipChildren="false">
 
-                <com.ravi.videotrimsample.crystalrangeseekbar.widgets.BubbleThumbSeekbar
+                <com.ravi.videotrimsample.widgets.BubbleThumbSeekbar
                     android:id="@+id/rangeSeekbar5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,7 +250,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
-                <com.ravi.videotrimsample.crystalrangeseekbar.widgets.CrystalSeekbar
+                <com.ravi.videotrimsample.widgets.CrystalSeekbar
                     android:id="@+id/rangeSeekbar6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -326,7 +326,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
-                <com.ravi.videotrimsample.crytal.widgets.MyRangeSeekbar
+                <com.ravi.videotrimsample.customseekar.MyRangeSeekbar
                     android:id="@+id/rangeSeekbar8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -362,7 +362,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
-                <com.ravi.videotrimsample.crystalrangeseekbar.widgets.CrystalSeekbar
+                <com.ravi.videotrimsample.widgets.CrystalSeekbar
                     android:id="@+id/rangeSeekbar9"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -7,7 +7,7 @@
     android:background="@color/black"
     tools:ignore="ContentDescription">
 
-    <com.google.android.exoplayer2.ui.PlayerView
+    <com.google.android.exoplayer2.ui.StyledPlayerView
         android:id="@+id/player_view_lib"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -121,7 +121,7 @@
         app:layout_constraintStart_toStartOf="parent"
         >
 
-        <com.ravi.videotrimsample.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+        <com.ravi.videotrimsample.customseekar.CrystalRangeSeekbar
             android:id="@+id/range_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
             app:right_thumb_image="@drawable/ic_max_seek"
             />
 
-        <com.ravi.videotrimsample.crystalrangeseekbar.widgets.CrystalSeekbar
+        <com.ravi.videotrimsample.customseekar.CrystalSeekbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"

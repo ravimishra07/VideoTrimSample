@@ -13,15 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VideoTrimSample">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ActVideoTrimmer"
+            android:name="com.ravi.videotrimsample.activity.VideoTrimActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
 
-            android:exported="false" />
+            android:exported="true" />
         <activity
-            android:name=".VideoSelectionActivity"
+            android:name="com.ravi.videotrimsample.activity.VideoSelectionActivity"
 
             android:exported="true">
             <intent-filter>
