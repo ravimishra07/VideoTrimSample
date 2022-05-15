@@ -51,7 +51,7 @@ import java.util.concurrent.Executors
 
 class VideoTrimActivity : AppCompatActivity() {
     companion object {
-        const val MAX_DURATION = 12L
+        const val MAX_DURATION = 5L
     }
 
     private var playerView: StyledPlayerView? = null
@@ -122,7 +122,7 @@ class VideoTrimActivity : AppCompatActivity() {
         btnDone = findViewById(R.id.btnDone)
         btnDone?.setOnClickListener { doneClicked() }
         ivClose?.setOnClickListener{
-            setRange(0L,5L)
+            finish()
         }
         val imageOne = findViewById<ImageView>(R.id.image_one)
         val imageTwo = findViewById<ImageView>(R.id.image_two)
@@ -282,22 +282,13 @@ class VideoTrimActivity : AppCompatActivity() {
         lastMaxValue = maxToGap
         seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
         seekbar?.apply {
-
-//            setMaxValue(totalDuration.toFloat()).apply()
-//            setMaxStartValue(totalDuration.toFloat()).apply()
-//            setMaxStartValue(60f)
-//            setFixGap(90f)
-
             seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
              setMaxValue(totalDuration.toFloat())?.apply()
-            setMaxStartValue(12F)?.apply()
+             setMaxStartValue(12F)?.apply()
             if (totalDuration.toFloat() > MAX_DURATION) {
                 seekbar?.setMaxStartValue(MAX_DURATION.toFloat())?.apply()
-                    val mGap = MAX_DURATION*100 / totalDuration.toFloat()
-              // addMaxGap(mGap)
-               setFixGap(mGap)
-                    //setGap(3F).apply()
-
+                val mGap = MAX_DURATION*100 / totalDuration.toFloat()
+                setFixGap(mGap)
             } else {
                 setMaxStartValue(totalDuration.toFloat())?.apply()
             }

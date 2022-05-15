@@ -865,17 +865,11 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
 
     private fun addFixGap(leftThumb: Boolean) {
         if (leftThumb) {
-            if(fixGap>normalizedMinValue){
+            if(fixGap<normalizedMaxValue){
                 if(normalizedMaxValue-normalizedMinValue>fixGap){
                     normalizedMaxValue = fixGap + normalizedMinValue
                 }
             }
-
-//            normalizedMaxValue = normalizedMinValue + fixGap
-//            if (normalizedMaxValue >= 100) {
-//                normalizedMaxValue = 100.0
-//                normalizedMinValue = normalizedMaxValue - fixGap
-//            }
         } else {
             if(fixGap<normalizedMaxValue){
                 if(normalizedMaxValue-normalizedMinValue>fixGap){
