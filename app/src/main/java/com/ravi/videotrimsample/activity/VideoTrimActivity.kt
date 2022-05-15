@@ -24,7 +24,10 @@ import com.arthenica.mobileffmpeg.FFmpeg
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -32,7 +35,6 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.ravi.videotrimsample.util.FileUtils
 import com.ravi.videotrimsample.R
 import com.ravi.videotrimsample.customseekar.CrystalRangeSeekbar
 import com.ravi.videotrimsample.customseekar.CrystalSeekbar
@@ -40,12 +42,17 @@ import com.ravi.videotrimsample.interfaces.OnRangeSeekbarChangeListener
 import com.ravi.videotrimsample.interfaces.OnRangeSeekbarFinalValueListener
 import com.ravi.videotrimsample.interfaces.OnSeekbarFinalValueListener
 import com.ravi.videotrimsample.util.Constants
+import com.ravi.videotrimsample.util.FileUtils
 import com.ravi.videotrimsample.util.Utils
+import kotlinx.coroutines.selects.select
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 
 class VideoTrimActivity : AppCompatActivity() {
+    companion object {
+        const val MAX_DURATION = 12L
+    }
 
     private var playerView: StyledPlayerView? = null
     private var videoPlayer: ExoPlayer? = null
@@ -58,10 +65,10 @@ class VideoTrimActivity : AppCompatActivity() {
     private var txtStartDuration: TextView? = null
     private var txtEndDuration: TextView? = null
     private var seekbar: CrystalRangeSeekbar? = null
+    private var seekbarController: CrystalSeekbar? = null
     private var lastMinValue: Long = 0
     private var lastMaxValue: Long = 0
     private var menuDone: MenuItem? = null
-    private var seekbarController: CrystalSeekbar? = null
     private var isValidVideo = true
     private var isVideoEnded = false
     private var seekHandler: Handler? = null
@@ -90,9 +97,11 @@ class VideoTrimActivity : AppCompatActivity() {
     private var hidePlayerSeek = false
     private var isAccurateCut = false
     private var showFileLocationAlert = false
+
     //private var progressView: ProgressBar? = null
     private var fileName: String? = null
     private var btnDone: TextView? = null
+    private var isInitialRangeSet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,6 +121,9 @@ class VideoTrimActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progress_circular)
         btnDone = findViewById(R.id.btnDone)
         btnDone?.setOnClickListener { doneClicked() }
+        ivClose?.setOnClickListener{
+            setRange(0L,5L)
+        }
         val imageOne = findViewById<ImageView>(R.id.image_one)
         val imageTwo = findViewById<ImageView>(R.id.image_two)
         val imageThree = findViewById<ImageView>(R.id.image_three)
@@ -126,7 +138,7 @@ class VideoTrimActivity : AppCompatActivity() {
         )
         seekHandler = Handler(Looper.getMainLooper())
         initPlayer()
-       // progressView = ProgressBar(this)
+        // progressView = ProgressBar(this)
         if (checkStoragePermission()) setDataInView()
     }
 
@@ -152,14 +164,17 @@ class VideoTrimActivity : AppCompatActivity() {
         try {
             val fileUriRunnable = Runnable {
                 uri = Uri.parse(bundle!!.getString(Constants.TRIM_VIDEO_URI))
-                val path = FileUtils.getRealPath(this@VideoTrimActivity, Uri.parse(bundle!!.getString(Constants.TRIM_VIDEO_URI)))
+                val path = FileUtils.getRealPath(
+                    this@VideoTrimActivity,
+                    Uri.parse(bundle!!.getString(Constants.TRIM_VIDEO_URI))
+                )
                 uri = Uri.parse(path)
                 runOnUiThread {
                     Log.v("VideoUri:: ", uri.toString())
                     progressBar?.visibility = View.GONE
                     totalDuration = Utils.getDuration(this@VideoTrimActivity, uri)
-                    imagePlayPause?.setOnClickListener { v: View? -> onVideoClicked() }
-                    playerView?.videoSurfaceView?.setOnClickListener{
+                    imagePlayPause?.setOnClickListener { _: View? -> onVideoClicked() }
+                    playerView?.videoSurfaceView?.setOnClickListener {
                         onVideoClicked()
                     }
                     buildMediaSource(uri)
@@ -201,7 +216,7 @@ class VideoTrimActivity : AppCompatActivity() {
                         mUri!!
                     )
                 )
-            videoPlayer?.apply{
+            videoPlayer?.apply {
                 addMediaSource(mediaSource)
                 prepare()
                 playWhenReady = true
@@ -251,7 +266,9 @@ class VideoTrimActivity : AppCompatActivity() {
                     .apply(options)
                     .transition(DrawableTransitionOptions.withCrossFade(300))
                     .into(img)
-                if (sec < totalDuration) sec++
+                if (sec < totalDuration) {
+                    sec++
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -262,45 +279,66 @@ class VideoTrimActivity : AppCompatActivity() {
         seekbar?.visibility = View.VISIBLE
         txtStartDuration?.visibility = View.VISIBLE
         txtEndDuration?.visibility = View.VISIBLE
-        seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
-        seekbar?.apply{
-            setMaxValue(totalDuration.toFloat())?.apply()
-            setMaxStartValue(totalDuration.toFloat())?.apply()
-            setMaxStartValue(maxToGap.toFloat())
-            setGap(minFromGap.toFloat())?.apply()
-        }
         lastMaxValue = maxToGap
+        seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
+        seekbar?.apply {
+
+//            setMaxValue(totalDuration.toFloat()).apply()
+//            setMaxStartValue(totalDuration.toFloat()).apply()
+//            setMaxStartValue(60f)
+//            setFixGap(90f)
+
+            seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
+             setMaxValue(totalDuration.toFloat())?.apply()
+            setMaxStartValue(12F)?.apply()
+            if (totalDuration.toFloat() > MAX_DURATION) {
+                seekbar?.setMaxStartValue(MAX_DURATION.toFloat())?.apply()
+                    val mGap = MAX_DURATION*100 / totalDuration.toFloat()
+              // addMaxGap(mGap)
+               setFixGap(mGap)
+                    //setGap(3F).apply()
+
+            } else {
+                setMaxStartValue(totalDuration.toFloat())?.apply()
+            }
+        }
+
 
         if (hidePlayerSeek) seekbarController?.visibility = View.GONE
 
-        seekbar?.setOnRangeSeekbarFinalValueListener(object : OnRangeSeekbarFinalValueListener{
+        seekbar?.setOnRangeSeekbarFinalValueListener(object : OnRangeSeekbarFinalValueListener {
             override fun finalValue(minValue: Number?, maxValue: Number?) {
-                if (!hidePlayerSeek){
-                   // seekbarController?.visibility = View.VISIBLE
+                if (!hidePlayerSeek) {
+                    seekbarController?.visibility = View.VISIBLE
                 }
             }
         })
-        seekbar?.setOnRangeSeekbarChangeListener(object : OnRangeSeekbarChangeListener{
+        seekbar?.setOnRangeSeekbarChangeListener(object : OnRangeSeekbarChangeListener {
             override fun valueChanged(minValue: Number?, maxValue: Number?) {
 
-                    val minVal = minValue as Long
-                    val maxVal = maxValue as Long
-                    if (lastMinValue != minVal) {
-                        seekTo(minValue)
-                            if (!hidePlayerSeek) seekbarController!!.visibility = View.INVISIBLE
+                setRange(minValue as Long, maxValue as Long)
 
-                    }
-                    lastMinValue = minVal
-                    lastMaxValue = maxVal
-                    txtStartDuration?.text = Utils.formatSeconds(minVal)
-                    txtEndDuration?.text = Utils.formatSeconds(maxVal)
-                    // if (trimType == 3) setDoneColor(minVal, maxVal)
-
+//                if (isInitialRangeSet) {
+//                    setRange(minValue as Long, maxValue as Long)
+//                }else{
+//                    isInitialRangeSet = true
+//                }
+//                else {
+//                    lastMinValue = minValue?.toLong() ?:0L
+//
+//                    if (totalDuration.toFloat() > MAX_DURATION) {
+//                        seekTo(MAX_DURATION)
+//                        lastMaxValue = MAX_DURATION//maxValue?.toLong() ?:0L
+//                    } else {
+//                        seekTo(totalDuration)
+//                        lastMaxValue = totalDuration
+//                    }
+//                    txtStartDuration?.text = Utils.formatSeconds(minValue?.toLong() ?: 0L)
+//                    txtEndDuration?.text = Utils.formatSeconds(totalDuration)
+//                }
             }
-
         })
-
-        seekbarController?.setOnSeekbarFinalValueListener(object :OnSeekbarFinalValueListener{
+        seekbarController?.setOnSeekbarFinalValueListener(object : OnSeekbarFinalValueListener {
             override fun finalValue(value: Number?) {
                 val value1 = value as Long
                 if (value1 in (lastMinValue + 1) until lastMaxValue) {
@@ -316,6 +354,18 @@ class VideoTrimActivity : AppCompatActivity() {
             }
         })
     }
+
+    private fun setRange(minVal: Long, maxVal: Long) {
+        //  if (lastMinValue != minVal) {
+        seekTo(minVal)
+        if (!hidePlayerSeek) seekbarController?.visibility = View.INVISIBLE
+        // }
+        lastMinValue = minVal
+        lastMaxValue = maxVal
+        txtStartDuration?.text = Utils.formatSeconds(minVal)
+        txtEndDuration?.text = Utils.formatSeconds(maxVal)
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -339,7 +389,7 @@ class VideoTrimActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (videoPlayer != null) videoPlayer!!.release()
-       // if (progressView != null && progressView?.isVisible) progressView!!.dismiss()
+        // if (progressView != null && progressView?.isVisible) progressView!!.dismiss()
         deleteFile("temp_file")
         stopRepeatingTask()
     }
@@ -361,12 +411,12 @@ class VideoTrimActivity : AppCompatActivity() {
             videoPlayer!!.playWhenReady = false
             showProcessingDialog()
             val complexCommand: Array<String?> = arrayOf(
-                    "-ss", Utils.formatCSeconds(lastMinValue),
-                    "-i", uri.toString(),
-                    "-t",
+                "-ss", Utils.formatCSeconds(lastMinValue),
+                "-i", uri.toString(),
+                "-t",
                 Utils.formatCSeconds(lastMaxValue - lastMinValue),
-                    "-async", "1", "-strict", "-2", "-c", "copy", outputPath
-                )
+                "-async", "1", "-strict", "-2", "-c", "copy", outputPath
+            )
 
             execFFmpegBinary(complexCommand, true)
         } else Toast.makeText(
@@ -413,13 +463,13 @@ class VideoTrimActivity : AppCompatActivity() {
             }
             //Default compression option
             return arrayOf(
-                    "-ss", Utils.formatCSeconds(lastMinValue),
-                    "-i", uri.toString(), "-s", w.toString() + "x" + h, "-r",
-                    "30", "-vcodec", "mpeg4", "-b:v",
-                    "400K", "-b:a", "48000", "-ac", "2", "-ar", "22050",
-                    "-t",
+                "-ss", Utils.formatCSeconds(lastMinValue),
+                "-i", uri.toString(), "-s", w.toString() + "x" + h, "-r",
+                "30", "-vcodec", "mpeg4", "-b:v",
+                "400K", "-b:a", "48000", "-ac", "2", "-ar", "22050",
+                "-t",
                 Utils.formatCSeconds(lastMaxValue - lastMinValue), outputPath
-                )
+            )
         }
 
     private fun execFFmpegBinary(command: Array<String?>, retry: Boolean) {

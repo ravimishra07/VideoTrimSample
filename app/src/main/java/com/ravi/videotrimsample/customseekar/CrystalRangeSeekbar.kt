@@ -33,6 +33,7 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
     //private static final int DEFAULT_THUMB_HEIGHT = 80;
     private val NO_STEP = -1f
     private val NO_FIXED_GAP = -1f
+    var mGapValue = 0.0F
 
     //////////////////////////////////////////
     // PUBLIC CONSTANTS CLASS
@@ -147,6 +148,7 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
             fixGap = fixGap / (absoluteMaxValue - absoluteMinValue) * 100
             addFixGap(true)
         }
+
         thumbWidth = getThumbWidth()
         thumbHeight = getThumbHeight()
 
@@ -401,6 +403,7 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
             fixGap = fixGap / (absoluteMaxValue - absoluteMinValue) * 100
             addFixGap(true)
         }
+        //addMaxGap(60F)
         thumbWidth = getThumbWidth()
         thumbHeight = getThumbHeight()
 
@@ -410,14 +413,18 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
         barPadding = thumbWidth * 0.5f
 
         // set min start value
-        if (minStartValue <= absoluteMinValue) {
-            minStartValue = 0f
-            setNormalizedMinValue(minStartValue.toDouble())
-        } else if (minStartValue >= absoluteMaxValue) {
-            minStartValue = absoluteMaxValue
-            setMinStartValue()
-        } else {
-            setMinStartValue()
+        when {
+            minStartValue <= absoluteMinValue -> {
+                minStartValue = 0f
+                setNormalizedMinValue(minStartValue.toDouble())
+            }
+            minStartValue >= absoluteMaxValue -> {
+                minStartValue = absoluteMaxValue
+                setMinStartValue()
+            }
+            else -> {
+                setMinStartValue()
+            }
         }
 
         // set max start value
@@ -749,7 +756,7 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
     //////////////////////////////////////////
     // PRIVATE METHODS
     //////////////////////////////////////////
-    private fun setMinStartValue() {
+     fun setMinStartValue() {
         if (minStartValue > minValue && minStartValue <= maxValue) {
             minStartValue = Math.min(minStartValue, absoluteMaxValue)
             minStartValue -= absoluteMinValue
@@ -827,9 +834,9 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
             // prevent division by zero, simply return 0.
             0.0
         } else {
-            width = width - barPadding * 2
+            width -= this.barPadding * 2
             var result = screenCoord / width * 100.0
-            result = result - barPadding / width * 100.0
+            result -= this.barPadding / width * 100.0
             result = Math.min(100.0, Math.max(0.0, result))
             result
         }
@@ -849,6 +856,7 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
         normalizedMaxValue = Math.max(0.0, Math.min(100.0, Math.max(value, normalizedMinValue)))
         if (fixGap != NO_FIXED_GAP && fixGap > 0) {
             addFixGap(false)
+            addMaxGap()
         } else {
             addMaxGap()
         }
@@ -857,18 +865,49 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
 
     private fun addFixGap(leftThumb: Boolean) {
         if (leftThumb) {
-            normalizedMaxValue = normalizedMinValue + fixGap
-            if (normalizedMaxValue >= 100) {
-                normalizedMaxValue = 100.0
-                normalizedMinValue = normalizedMaxValue - fixGap
+            if(fixGap>normalizedMinValue){
+                if(normalizedMaxValue-normalizedMinValue>fixGap){
+                    normalizedMaxValue = fixGap + normalizedMinValue
+                }
             }
+
+//            normalizedMaxValue = normalizedMinValue + fixGap
+//            if (normalizedMaxValue >= 100) {
+//                normalizedMaxValue = 100.0
+//                normalizedMinValue = normalizedMaxValue - fixGap
+//            }
         } else {
-            normalizedMinValue = normalizedMaxValue - fixGap
-            if (normalizedMinValue <= 0) {
-                normalizedMinValue = 0.0
-                normalizedMaxValue = normalizedMinValue + fixGap
+            if(fixGap<normalizedMaxValue){
+                if(normalizedMaxValue-normalizedMinValue>fixGap){
+                    normalizedMinValue = normalizedMaxValue-fixGap
+                }
             }
         }
+    }
+
+    fun addMaxGap(maxGap:Float,leftThumb: Boolean=false) {
+        if (leftThumb) {
+            normalizedMaxValue = normalizedMinValue + maxGap
+            if (normalizedMaxValue >= 100) {
+                normalizedMaxValue = 100.0
+                normalizedMinValue = normalizedMaxValue - maxGap
+            }
+        } else {
+            normalizedMinValue = normalizedMaxValue - maxGap
+            if (normalizedMinValue <= 0) {
+                normalizedMinValue = 0.0
+                normalizedMaxValue = normalizedMinValue + maxGap
+            }
+        }
+
+//        if (normalizedMaxValue - maxGap < normalizedMinValue) {
+//            val g = normalizedMaxValue - maxGap
+//            normalizedMinValue = g
+//            normalizedMinValue = Math.max(0.0, Math.min(100.0, Math.min(g, normalizedMaxValue)))
+//            if (normalizedMaxValue <= normalizedMinValue + maxGap) {
+//                normalizedMaxValue = normalizedMinValue + maxGap
+//            }
+//        }
     }
 
     private fun addMinGap() {
@@ -893,9 +932,10 @@ open class CrystalRangeSeekbar @JvmOverloads constructor(
         }
     }
 
+
     private fun normalizedToValue(normalized: Double): Double {
         var `val` = normalized / 100 * (maxValue - minValue)
-        `val` = `val` + minValue
+        `val` += minValue
         return `val`
     }
 
