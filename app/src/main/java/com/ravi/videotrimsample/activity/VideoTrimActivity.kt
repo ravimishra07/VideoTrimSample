@@ -13,10 +13,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,14 +21,12 @@ import com.arthenica.mobileffmpeg.FFmpeg
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -44,7 +39,6 @@ import com.ravi.videotrimsample.interfaces.OnSeekbarFinalValueListener
 import com.ravi.videotrimsample.util.Constants
 import com.ravi.videotrimsample.util.FileUtils
 import com.ravi.videotrimsample.util.Utils
-import kotlinx.coroutines.selects.select
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
@@ -54,8 +48,8 @@ class VideoTrimActivity : AppCompatActivity() {
         const val MAX_DURATION = 60L
     }
 
-    private var playerView: StyledPlayerView? = null
-    private var videoPlayer: ExoPlayer? = null
+    private var playerView: PlayerView? = null
+    private var videoPlayer: SimpleExoPlayer? = null
     private var imagePlayPause: ImageView? = null
     private var ivClose: ImageView? = null
     private lateinit var imageViews: Array<ImageView>
@@ -147,7 +141,7 @@ class VideoTrimActivity : AppCompatActivity() {
      */
     private fun initPlayer() {
         try {
-            videoPlayer = ExoPlayer.Builder(this).build()
+            videoPlayer = SimpleExoPlayer.Builder(this).build()
             playerView?.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             playerView?.player = videoPlayer
             val audioAttributes = AudioAttributes.Builder()
