@@ -195,9 +195,11 @@
 
             <ImageView
                 android:id="@+id/image_five"
+                style="@style/ImageTrim"
+                android:layout_height="match_parent"
+
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                style="@style/ImageTrim" />
+                android:paddingBottom="10dp" />
 
             <ImageView
                 android:id="@+id/image_six"

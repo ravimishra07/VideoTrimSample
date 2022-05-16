@@ -284,7 +284,6 @@ class VideoTrimActivity : AppCompatActivity() {
         seekbar?.apply {
             seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
             setMaxValue(totalDuration.toFloat()).apply()
-            setMaxStartValue(12F).apply()
             if (totalDuration.toFloat() > MAX_DURATION) {
                 seekbar?.setMaxStartValue(MAX_DURATION.toFloat())?.apply()
                 val mGap = MAX_DURATION*100 / totalDuration.toFloat()
@@ -295,7 +294,7 @@ class VideoTrimActivity : AppCompatActivity() {
         }
 
 
-        if (hidePlayerSeek) seekbarController?.visibility = View.GONE
+      //  if (hidePlayerSeek) seekbarController?.visibility = View.GONE
 
         seekbar?.setOnRangeSeekbarFinalValueListener(object : OnRangeSeekbarFinalValueListener {
             override fun finalValue(minValue: Number?, maxValue: Number?) {
@@ -306,27 +305,7 @@ class VideoTrimActivity : AppCompatActivity() {
         })
         seekbar?.setOnRangeSeekbarChangeListener(object : OnRangeSeekbarChangeListener {
             override fun valueChanged(minValue: Number?, maxValue: Number?) {
-
-                setRange(minValue as Long, maxValue as Long)
-
-//                if (isInitialRangeSet) {
-//                    setRange(minValue as Long, maxValue as Long)
-//                }else{
-//                    isInitialRangeSet = true
-//                }
-//                else {
-//                    lastMinValue = minValue?.toLong() ?:0L
-//
-//                    if (totalDuration.toFloat() > MAX_DURATION) {
-//                        seekTo(MAX_DURATION)
-//                        lastMaxValue = MAX_DURATION//maxValue?.toLong() ?:0L
-//                    } else {
-//                        seekTo(totalDuration)
-//                        lastMaxValue = totalDuration
-//                    }
-//                    txtStartDuration?.text = Utils.formatSeconds(minValue?.toLong() ?: 0L)
-//                    txtEndDuration?.text = Utils.formatSeconds(totalDuration)
-//                }
+                setRange(minValue?.toLong() ?:0L, maxValue?.toLong() ?:0L)
             }
         })
         seekbarController?.setOnSeekbarFinalValueListener(object : OnSeekbarFinalValueListener {
