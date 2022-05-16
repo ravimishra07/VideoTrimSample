@@ -30,7 +30,7 @@ class RangeSeekbar : Fragment() {
     ): View? {
         if (rootView != null) {
             val parent = rootView!!.parent as ViewGroup
-            parent?.removeView(rootView)
+            parent.removeView(rootView)
         }
         try {
             rootView = inflater.inflate(R.layout.range_seekbar, container, false)

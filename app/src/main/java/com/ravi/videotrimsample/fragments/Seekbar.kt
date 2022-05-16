@@ -27,7 +27,7 @@ class Seekbar : Fragment() {
     ): View? {
         if (rootView != null) {
             val parent = rootView!!.parent as ViewGroup
-            parent?.removeView(rootView)
+            parent.removeView(rootView)
         }
         try {
             rootView = inflater.inflate(R.layout.seekbar, container, false)

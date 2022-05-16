@@ -1,10 +1,12 @@
 package com.ravi.videotrimsample.activity
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.MediaController
 import android.widget.TextView
@@ -15,10 +17,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.ravi.videotrimsample.R
 import com.ravi.videotrimsample.util.Constants
 import com.ravi.videotrimsample.util.Constants.TRIMMED_VIDEO_PATH
-import com.ravi.videotrimsample.R
 import java.io.File
+
 
 class VideoSelectionActivity : AppCompatActivity() {
     lateinit var selectVideo: TextView

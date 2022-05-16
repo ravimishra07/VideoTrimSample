@@ -12,18 +12,13 @@ import android.util.AttributeSet
  * Created by owais.ali on 7/12/2016.
  */
 class MyRangeSeekbar : CrystalRangeSeekbar {
-    constructor(context: Context) : super(context) {}
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    ) {
-    }
-
-    override fun getCornerRadius(typedArray: TypedArray): Float {
-        return super.getCornerRadius(typedArray)
-    }
+    )
 
     override fun getMinValue(typedArray: TypedArray): Float {
         return 5f
@@ -39,18 +34,6 @@ class MyRangeSeekbar : CrystalRangeSeekbar {
 
     override fun getMaxStartValue(typedArray: TypedArray): Float {
         return 50f
-    }
-
-    override fun getSteps(typedArray: TypedArray): Float {
-        return super.getSteps(typedArray)
-    }
-
-    override fun getGap(typedArray: TypedArray): Float {
-        return super.getGap(typedArray)
-    }
-
-    override fun getFixedGap(typedArray: TypedArray): Float {
-        return super.getFixedGap(typedArray)
     }
 
     override fun getBarColor(typedArray: TypedArray): Int {
@@ -93,7 +76,4 @@ class MyRangeSeekbar : CrystalRangeSeekbar {
         return ContextCompat.getDrawable(context, R.drawable.thumb_pressed)
     }
 
-    override fun getDataType(typedArray: TypedArray): Int {
-        return super.getDataType(typedArray)
-    }
 }

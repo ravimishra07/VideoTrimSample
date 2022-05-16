@@ -14,7 +14,7 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="80dp"
         android:layout_marginEnd="60dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toTopOf="@+id/seekbarLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="34dp"
+        android:text="TRIM"
 
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/seekbarLayout"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txt_start_duration"
@@ -72,9 +83,9 @@
 
     <ImageView
        android:id="@+id/ivClose"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginStart="12dp"
         android:src="@drawable/ic_close"
         android:textColor="@color/purple_200"
@@ -87,12 +98,12 @@
         android:id="@+id/btnDone"
         android:layout_width="100dp"
         android:layout_height="42dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="12dp"
         android:gravity="center"
-        android:text="Next"
-        android:textColor="@color/purple_200"
-        android:textSize="18sp"
+        android:text="NEXT"
+        android:textColor="#4d22f8"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

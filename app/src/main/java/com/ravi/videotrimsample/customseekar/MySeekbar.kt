@@ -12,18 +12,13 @@ import android.util.AttributeSet
  * Created by owais.ali on 7/12/2016.
  */
 class MySeekbar : CrystalSeekbar {
-    constructor(context: Context) : super(context) {}
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    ) {
-    }
-
-    override fun getCornerRadius(typedArray: TypedArray): Float {
-        return super.getCornerRadius(typedArray)
-    }
+    )
 
     override fun getMinValue(typedArray: TypedArray): Float {
         return 5f
@@ -35,10 +30,6 @@ class MySeekbar : CrystalSeekbar {
 
     override fun getMinStartValue(typedArray: TypedArray): Float {
         return 20f
-    }
-
-    override fun getSteps(typedArray: TypedArray): Float {
-        return super.getSteps(typedArray)
     }
 
     override fun getBarColor(typedArray: TypedArray): Int {
@@ -65,7 +56,4 @@ class MySeekbar : CrystalSeekbar {
         return ContextCompat.getDrawable(context, R.drawable.thumb_pressed)
     }
 
-    override fun getDataType(typedArray: TypedArray): Int {
-        return super.getDataType(typedArray)
-    }
 }

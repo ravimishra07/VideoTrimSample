@@ -283,14 +283,14 @@ class VideoTrimActivity : AppCompatActivity() {
         seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
         seekbar?.apply {
             seekbarController?.setMaxValue(totalDuration.toFloat())?.apply()
-             setMaxValue(totalDuration.toFloat())?.apply()
-             setMaxStartValue(12F)?.apply()
+            setMaxValue(totalDuration.toFloat()).apply()
+            setMaxStartValue(12F).apply()
             if (totalDuration.toFloat() > MAX_DURATION) {
                 seekbar?.setMaxStartValue(MAX_DURATION.toFloat())?.apply()
                 val mGap = MAX_DURATION*100 / totalDuration.toFloat()
                 setFixGap(mGap)
             } else {
-                setMaxStartValue(totalDuration.toFloat())?.apply()
+                setMaxStartValue(totalDuration.toFloat()).apply()
             }
         }
 
@@ -399,7 +399,7 @@ class VideoTrimActivity : AppCompatActivity() {
             //not exceed given maxDuration if has given
             outputPath = getFileName()
 
-            videoPlayer!!.playWhenReady = false
+            videoPlayer?.playWhenReady = false
             showProcessingDialog()
             val complexCommand: Array<String?> = arrayOf(
                 "-ss", Utils.formatCSeconds(lastMinValue),
@@ -418,7 +418,9 @@ class VideoTrimActivity : AppCompatActivity() {
     }
 
     private fun getFileName(): String {
-        val path = getExternalFilesDir("TrimmedVideo")!!.path
+        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath
+        Environment.getExternalStorageDirectory()
+
         val calender = Calendar.getInstance()
         val fileDateTime = calender[Calendar.YEAR].toString() + "_" +
                 calender[Calendar.MONTH] + "_" +
