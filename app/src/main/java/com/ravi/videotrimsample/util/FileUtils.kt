@@ -8,19 +8,10 @@ import android.os.Environment
 import android.text.TextUtils
 import android.content.ContentUris
 import android.provider.OpenableColumns
-import com.ravi.videotrimsample.util.LocaleHelper
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import android.annotation.TargetApi
-import androidx.core.content.ContextCompat
-import android.app.Activity
-import android.media.MediaMetadataRetriever
-import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.util.Log
-import android.webkit.MimeTypeMap
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
@@ -358,34 +349,4 @@ object FileUtils {
         return "com.google.android.apps.docs.storage" == uri.authority || "com.google.android.apps.docs.storage.legacy" == uri.authority
     }
 
-    fun getAllVideos(context: Context) {
-        val returnUri: Uri
-        returnUri =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) MediaStore.Video.Media.getContentUri(
-                MediaStore.VOLUME_EXTERNAL
-            ) else MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-        val cursor = context.contentResolver.query(
-            returnUri, arrayOf(
-                MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.DISPLAY_NAME,
-                MediaStore.Video.Media.WIDTH,
-                MediaStore.Video.Media.HEIGHT
-            ), null, null, null
-        )
-        val idColumn = cursor!!.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
-        val displayNameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
-        val widthColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.WIDTH)
-        val heightColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.HEIGHT)
-        while (cursor.moveToNext()) {
-            val id = cursor.getLong(idColumn)
-            val displayName = cursor.getString(displayNameColumn)
-            val width = cursor.getInt(widthColumn)
-            val height = cursor.getInt(heightColumn)
-            val contentUri = ContentUris.withAppendedId(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                id
-            )
-            // LogMessage.v("Video "+displayName+"  contentUri "+contentUri);
-        }
-    }
 }

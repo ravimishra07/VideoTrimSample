@@ -12,9 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.VideoTrimSample">
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="false" />
+
         <activity
             android:name="com.ravi.videotrimsample.activity.VideoTrimActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"

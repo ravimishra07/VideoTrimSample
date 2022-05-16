@@ -1,27 +1,13 @@
 package com.ravi.videotrimsample.util
 
-import android.provider.MediaStore
-import android.annotation.SuppressLint
-import android.os.Build
-import android.provider.DocumentsContract
-import android.os.Environment
-import android.text.TextUtils
-import android.content.ContentUris
-import android.provider.OpenableColumns
-import com.ravi.videotrimsample.util.LocaleHelper
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import android.annotation.TargetApi
-import androidx.core.content.ContextCompat
 import android.app.Activity
-import android.media.MediaMetadataRetriever
 import android.content.ContentResolver
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
 import java.io.File
-import java.lang.Exception
 
 object Utils {
     fun formatCSeconds(timeInSeconds: Long): String {
@@ -39,9 +25,6 @@ object Utils {
         return formattedTime
     }
 
-    fun getColor(context: Context?, color: Int): Int {
-        return ContextCompat.getColor(context!!, color)
-    }
 
     fun getDuration(context: Activity?, videoPath: Uri?): Long {
         try {
