@@ -51,7 +51,7 @@ import java.util.concurrent.Executors
 
 class VideoTrimActivity : AppCompatActivity() {
     companion object {
-        const val MAX_DURATION = 5L
+        const val MAX_DURATION = 60L
     }
 
     private var playerView: StyledPlayerView? = null
